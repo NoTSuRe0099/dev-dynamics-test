@@ -1,55 +1,59 @@
 import React from 'react';
 import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  Tooltip,
+  Area,
+  AreaChart,
   CartesianGrid,
   Legend,
-  AreaChart,
-  Area,
   ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
 } from 'recharts';
-import { IDayWiseActivity } from '../services/api';
 import { processDayWiseActivity } from '../functions';
+import { IActivityMeta, IDayWiseActivity } from '../services/api';
 
 interface ActivityChartProps {
   data: IDayWiseActivity[];
+  activityMeta: IActivityMeta[];
 }
 
-const ActivityChart: React.FC<ActivityChartProps> = ({ data }) => {
-  const chartData = processDayWiseActivity(data);
-  console.log('chartData', chartData);
+const ActivityChart: React.FC<ActivityChartProps> = ({
+  data,
+  activityMeta,
+}) => {
+  const chartData = processDayWiseActivity(data) || [];
+
   return (
-    <div className="bg-white border shadow-sm rounded-xl p-4 w-full">
-      <ResponsiveContainer>
-        <AreaChart width={900} height={300} data={chartData}>
-          <XAxis dataKey="date" />
-          <YAxis />
-          <CartesianGrid stroke="#eee" strokeDasharray="5 5" />
-          <Tooltip />
-          <Legend />
-          <Area
-            type="monotone"
-            dataKey="commits"
-            stroke="#8884d8"
-            fill="#8884d8"
-          />
-          <Area
-            type="monotone"
-            dataKey="prOpen"
-            stroke="#82ca9d"
-            fill="#82ca9d"
-          />
-          <Area
-            type="monotone"
-            dataKey="prMerged"
-            stroke="#ffc658"
-            fill="#ffc658"
-          />
-        </AreaChart>
-      </ResponsiveContainer>
+    <div className="bg-white border shadow-sm rounded-xl p-4 w-full lg:w-[75%] h-[500px] lg:h-full">
+      {activityMeta?.length && chartData?.length && (
+        <ResponsiveContainer height={'100%'}>
+          <AreaChart width={700} height={400} data={chartData || []}>
+            <XAxis dataKey="date" />
+            <YAxis />
+            <CartesianGrid stroke="#eee" strokeDasharray="5 5" />
+            <Tooltip
+              contentStyle={{
+                width: 'max-content',
+                fontSize: 12,
+                padding: 10,
+                margin: 0,
+                gap: 0,
+                fontWeight: '500',
+              }}
+            />
+            <Legend />
+            {activityMeta?.length &&
+              activityMeta?.map((activity) => (
+                <Area
+                  type="monotone"
+                  dataKey={activity?.label}
+                  stroke={activity?.fillColor?.toString()}
+                  fill={activity?.fillColor?.toString()}
+                />
+              ))}
+          </AreaChart>
+        </ResponsiveContainer>
+      )}
     </div>
   );
 };

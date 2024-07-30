@@ -37,7 +37,29 @@ export interface IActivityMeta {
 }
 
 export const fetchData = async (): Promise<ApiResponse> => {
-  const response = await fetch('./data.json');
-  const data: ApiResponse = await response.json();
-  return data;
+  try {
+    const response = await fetch('./data.json');
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response?.status}`);
+    }
+    console.log('response', response);
+    const data: ApiResponse = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Fetch error:', error);
+    throw error;
+  }
 };
+// const fetchData = async () => {
+//   try {
+//     const response = await fetch('your-api-endpoint');
+//     if (!response.ok) {
+//       throw new Error(`HTTP error! status: ${response.status}`);
+//     }
+//     const data = await response.json();
+//     return data;
+//   } catch (error) {
+//     console.error('Fetch error:', error);
+//     throw error;
+//   }
+// };

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router';
 import { IAuthorWorklog } from '../services/api';
 
 interface UserTableProps {
@@ -6,6 +7,11 @@ interface UserTableProps {
 }
 
 const UserTable: React.FC<UserTableProps> = ({ users }) => {
+  const navigate = useNavigate();
+  const openDetailsPage = (user: IAuthorWorklog) => {
+    navigate(`/userDetails/${user?.name}`);
+  };
+
   return (
     <>
       <div className="flex-col bg-white border shadow-sm rounded-xl flex p-4">
@@ -54,6 +60,7 @@ const UserTable: React.FC<UserTableProps> = ({ users }) => {
                       ))}
                       <td className="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
                         <button
+                          onClick={() => openDetailsPage(el)}
                           type="button"
                           className="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 focus:outline-none focus:text-blue-800 disabled:opacity-50 disabled:pointer-events-none"
                         >

@@ -37,7 +37,6 @@ interface iActivityStatisticsProps {
 const ActivityStatistics: React.FC<iActivityStatisticsProps> = ({
   userData,
   activityMeta,
-  dayWiseData,
 }) => {
   interface IActivities extends IActivityMeta {
     label: string;
@@ -45,13 +44,13 @@ const ActivityStatistics: React.FC<iActivityStatisticsProps> = ({
     change: number;
   }
 
-  let activities: IActivities[] = activityMeta.map((activity) => ({
+  const activities: IActivities[] = activityMeta.map((activity) => ({
     ...activity,
     total: 0,
     change: 0,
   }));
 
-  activities.map((activity) => {
+  activities.forEach((activity) => {
     userData?.forEach((user) =>
       user.totalActivity?.forEach((tActivity) => {
         if (
@@ -66,7 +65,7 @@ const ActivityStatistics: React.FC<iActivityStatisticsProps> = ({
 
   return (
     <>
-      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+      <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-2 sm:gap-5">
         {activities?.length ? (
           activities.map((activity, index) => (
             <div
