@@ -1,34 +1,39 @@
-export interface Activity {
+export interface IActivity {
   label: string;
   fillColor: string;
   count: number;
 }
 
-export interface DayWiseActivity {
+export interface IDayWiseActivity {
   date: string;
   items: {
-    children: Activity[];
+    children: IActivity[];
   };
 }
 
-export interface TotalActivity {
+export interface ITotalActivity {
   name: string;
   value: string;
 }
 
-export interface AuthorWorklog {
+export interface IAuthorWorklog {
   name: string;
-  totalActivity: TotalActivity[];
-  dayWiseActivity: DayWiseActivity[];
+  totalActivity: ITotalActivity[];
+  dayWiseActivity: IDayWiseActivity[];
 }
 
 export interface ApiResponse {
   data: {
     AuthorWorklog: {
-      activityMeta: { label: string; fillColor: string }[];
-      rows: AuthorWorklog[];
+      activityMeta: IActivityMeta[];
+      rows: IAuthorWorklog[];
     };
   };
+}
+
+export interface IActivityMeta {
+  label: string;
+  fillColor: String;
 }
 
 export const fetchData = async (): Promise<ApiResponse> => {

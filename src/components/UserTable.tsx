@@ -1,59 +1,74 @@
 import React from 'react';
-import { AuthorWorklog } from '../services/api';
+import { IAuthorWorklog } from '../services/api';
 
 interface UserTableProps {
-  users: AuthorWorklog[];
+  users: IAuthorWorklog[];
 }
 
 const UserTable: React.FC<UserTableProps> = ({ users }) => {
   return (
-    <table className="min-w-full leading-normal">
-      <thead>
-        <tr>
-          <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-            User
-          </th>
-          <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-            PR Open
-          </th>
-          <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-            PR Merged
-          </th>
-          <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-            Commits
-          </th>
-          <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-            PR Reviewed
-          </th>
-          <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-            --
-          </th>
-          <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-            --
-          </th>
-          <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-            --
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        {users.map((user) => (
-          <tr key={user.name}>
-            <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-              {user.name}
-            </td>
-            {user.totalActivity.map((activity) => (
-              <td
-                key={activity.name}
-                className="px-5 py-5 border-b border-gray-200 bg-white text-sm"
-              >
-                {activity.value}
-              </td>
-            ))}
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <>
+      <div className="flex-col bg-white border shadow-sm rounded-xl flex p-4">
+        <div className="-m-1.5 overflow-x-auto">
+          <div className="p-1.5 min-w-full inline-block align-middle">
+            <div className="border rounded-lg overflow-hidden">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase"
+                    >
+                      Name
+                    </th>
+                    {users[0]?.totalActivity?.map((it) => (
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase"
+                      >
+                        {it?.name ?? 'NA'}
+                      </th>
+                    ))}
+
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-end text-xs font-medium text-gray-500 uppercase"
+                    >
+                      Action
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {users?.map((el) => (
+                    <tr key={el?.name}>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">
+                        {el?.name}
+                      </td>
+                      {el?.totalActivity?.map((it, i) => (
+                        <td
+                          key={`_${it?.name}_${i}`}
+                          className="px-6 py-4 whitespace-nowrap text-sm text-gray-800"
+                        >
+                          {it?.value}
+                        </td>
+                      ))}
+                      <td className="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
+                        <button
+                          type="button"
+                          className="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 focus:outline-none focus:text-blue-800 disabled:opacity-50 disabled:pointer-events-none"
+                        >
+                          Details
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
   );
 };
 
