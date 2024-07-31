@@ -13,6 +13,7 @@ import { processDayWiseActivity } from '../functions';
 import { IActivityMeta, IDayWiseActivity } from '../services/api';
 import { DateRange, RangeKeyDict } from 'react-date-range';
 import { MdOutlineDateRange } from 'react-icons/md';
+import DatePicker from './DatePicker/DatePicker';
 interface ActivityChartProps {
   data: IDayWiseActivity[];
   activityMeta: IActivityMeta[];
@@ -22,49 +23,49 @@ const ActivityChart: React.FC<ActivityChartProps> = ({
   data,
   activityMeta,
 }) => {
-  const chartData = processDayWiseActivity(data) || [];
-  console.log('chartData', chartData);
+  const initChartData = processDayWiseActivity(data) || [];
+  const [chartData, setChartData] = useState(initChartData);
   const selectionRange = {
-    startDate: new Date(chartData[0]?.date),
-    endDate: new Date(chartData[chartData?.length - 1]?.date),
+    startDate: new Date(initChartData[0]?.date),
+    endDate: new Date(initChartData[initChartData?.length - 1]?.date),
     key: 'selection',
   };
 
   const [dateRange, setDateRange] = useState(selectionRange);
+  const handleRangeChange = (e: any) => {
+    setDateRange(e);
 
-  const handleSelect = (e: RangeKeyDict) => {
-    //@ts-ignore
-    setDateRange(e?.selection);
+    const _chartData = initChartData?.filter((it) => {
+      const itemDate = new Date(it?.date);
+      const startDate = new Date(e?.startDate);
+      const endDate = new Date(e?.endDate);
+
+      if (
+        isNaN(itemDate.getTime()) ||
+        isNaN(startDate.getTime()) ||
+        isNaN(endDate.getTime())
+      ) {
+        return false;
+      }
+
+      return itemDate >= startDate && itemDate <= endDate;
+    });
+
+    setChartData(_chartData);
   };
 
-  console.log('dateRange', dateRange);
-
-  const [isDateRangeOpened, setIsDateRangeOpened] = useState(false);
+  console.log('dateRange', dateRange, initChartData);
 
   return (
-    <div className="bg-white border shadow-sm rounded-xl p-4 w-full lg:w-[75%] h-[400px] lg:h-full relative">
-      <div className="flex justify-end">
-        <button
-          onClick={() => setIsDateRangeOpened((prevState) => !prevState)}
-          className="py-[7px] px-2.5 inline-flex items-center gap-1 font-medium text-sm rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-gray-100"
-        >
-          {isDateRangeOpened ? 'Close' : 'All Time'} <MdOutlineDateRange />
-        </button>
-        {isDateRangeOpened && (
-          <div className="absolute right-4 top-14 z-10 bg-white border shadow-sm rounded-xl p-4">
-            <DateRange
-              focusedRange={[0, 0]}
-              minDate={new Date(chartData[0]?.date)}
-              maxDate={new Date(chartData[chartData?.length - 1]?.date)}
-              ranges={[dateRange]}
-              onChange={handleSelect}
-            />
-          </div>
-        )}
-      </div>
-
+    <div className="bg-white border shadow-sm rounded-xl p-4 w-full lg:w-[75%] h-[400px] lg:h-full">
+      <DatePicker
+        dateRange={[dateRange]}
+        minDate={initChartData[0]?.date}
+        maxDate={initChartData[initChartData?.length - 1]?.date}
+        handleRangeChange={handleRangeChange}
+      />
       <div className="mt-4 w-full h-full max-h-[320px]">
-        {activityMeta?.length && chartData?.length && (
+        {activityMeta?.length && initChartData?.length && (
           <ResponsiveContainer>
             <AreaChart data={chartData || []}>
               <XAxis

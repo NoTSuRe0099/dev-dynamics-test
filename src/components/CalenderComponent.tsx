@@ -90,7 +90,7 @@ const CalenderComponent: React.FC<ICalenderComponent> = ({
   };
 
   const activityByDate = getActivities(dayWiseData);
-
+  console.log('activityByDate', activityByDate);
   const renderCell = (data: any) => {
     const isActivityAvailable = activityByDate?.find(
       (activity) =>
@@ -162,8 +162,8 @@ const CalenderComponent: React.FC<ICalenderComponent> = ({
             <li className="font-bold text-[12px]">
               <strong>Total:</strong> {totalActivities}
             </li>
-            {isActivityAvailable?.activities
-              ?.splice(0, 5)
+            {[...isActivityAvailable?.activities]
+              ?.splice(0,2)
               ?.map((item, index) => (
                 <li className="font-bold text-[12px]" key={index}>
                   <b style={{ color: item?.fillColor?.toString() }}>
@@ -178,8 +178,6 @@ const CalenderComponent: React.FC<ICalenderComponent> = ({
       );
     }
   };
-
-  
 
   return (
     <div className="">

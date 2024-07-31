@@ -1,4 +1,6 @@
 import React from 'react';
+import { IoIosTrendingDown, IoIosTrendingUp } from 'react-icons/io';
+import { aggregateData } from '../../functions';
 import {
   IActivityMeta,
   IAuthorWorklog,
@@ -10,29 +12,6 @@ interface iActivityStatisticsProps {
   activityMeta: IActivityMeta[];
   dayWiseData: IDayWiseActivity[];
 }
-
-// const init = [
-//   {
-//     label: 'PR Opene',
-//     total: 0,
-//     weeklyAverage: 10,
-//   },
-//   {
-//     label: 'PR Merged',
-//     total: 0,
-//     weeklyAverage: 10,
-//   },
-//   {
-//     label: 'Commits',
-//     total: 0,
-//     weeklyAverage: 10,
-//   },
-//   {
-//     label: 'PR Reviewed',
-//     total: 0,
-//     weeklyAverage: 10,
-//   },
-// ];
 
 const ActivityStatistics: React.FC<iActivityStatisticsProps> = ({
   userData,
@@ -63,6 +42,8 @@ const ActivityStatistics: React.FC<iActivityStatisticsProps> = ({
     );
   });
 
+  const weeklyAverage = aggregateData(userData);
+  console.log('weeklyAverage', weeklyAverage);
   return (
     <>
       <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-2 sm:gap-5">
@@ -70,30 +51,34 @@ const ActivityStatistics: React.FC<iActivityStatisticsProps> = ({
           activities.map((activity, index) => (
             <div
               key={index}
-              className="flex flex-col bg-white border shadow-sm rounded-xl "
+              className="flex flex-col bg-white border shadow-sm rounded-xl p-4 md:p-5 space-y-2"
             >
-              <div className="p-4 md:p-5">
-                <div className="flex items-center gap-x-2">
-                  <p
-                    className={`text-xs uppercase tracking-wide text-gray-500 `}
+              <div className="flex items-center gap-x-2">
+                <p className="text-xs uppercase tracking-wide text-gray-500">
+                  {activity.label}
+                </p>
+              </div>
+
+              <div className="mt-1 flex items-center justify-between">
+                <h3 className="text-xl sm:text-2xl font-medium text-gray-800">
+                  {activity.total}
+                </h3>
+                <div className="flex flex-col items-end">
+                  <span className="text-sm text-gray-500">Weekly Avg</span>
+                  <span
+                    className={`text-md font-semibold text-gray-800 flex items-center gap-1 justify-center ${
+                      weeklyAverage[activity.label]?.trend === 'Increased'
+                        ? 'text-green-600'
+                        : 'text-red-600'
+                    }`}
                   >
-                    {activity.label}
-                  </p>
-                </div>
-                <div className="mt-1 flex items-center gap-x-2">
-                  <h3 className="text-xl sm:text-2xl font-medium text-gray-800">
-                    {activity.total}
-                  </h3>
-                  {/* <span
-                className={`flex items-center gap-x-1 ${
-                  activity.change >= 0 ? 'text-green-600' : 'text-red-600'
-                }`}
-              >
-                {activity.change >= 0 ? <FaArrowUp /> : <FaArrowDown />}
-                <span className="inline-block text-sm">
-                  {Math.abs(activity.change)}%
-                </span>
-              </span> */}
+                    {weeklyAverage[activity.label]?.average?.toFixed(2)}{' '}
+                    {weeklyAverage[activity.label]?.trend === 'Increased' ? (
+                      <IoIosTrendingUp />
+                    ) : (
+                      <IoIosTrendingDown />
+                    )}
+                  </span>
                 </div>
               </div>
             </div>
