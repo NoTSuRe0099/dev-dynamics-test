@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
-import Dashboard from './reducers/pages/Dashboard';
-import UserDetails from './reducers/pages/UserDetails';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   selectLoading,
   selectError,
   fetchUserData,
 } from './reducers/userSlice';
+import Dashboard from './pages/Dashboard';
+import UserDetails from './pages/UserDetails';
 
 const App: React.FC = () => {
   const dispatch = useDispatch();

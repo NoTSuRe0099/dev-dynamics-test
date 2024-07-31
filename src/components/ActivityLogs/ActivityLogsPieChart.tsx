@@ -1,7 +1,7 @@
 import React from 'react';
 import { Cell, Pie, PieChart, ResponsiveContainer } from 'recharts';
 import { IActivityMeta } from '../../services/api';
-interface IActilityLogsPieChartProps {
+interface IActivityLogsPieChartProps {
   userData: {
     date: string;
     activities: { count: string; fillColor: string; label: string }[];
@@ -44,7 +44,7 @@ const renderCustomizedLabel = ({
   );
 };
 
-const ActilityLogsPieChart: React.FC<IActilityLogsPieChartProps> = ({
+const ActivityLogsPieChart: React.FC<IActivityLogsPieChartProps> = ({
   activityMeta,
   userData,
 }) => {
@@ -54,7 +54,7 @@ const ActilityLogsPieChart: React.FC<IActilityLogsPieChartProps> = ({
   }
 
   const activities: IActivities[] =
-    activityMeta.map((activity) => ({
+    activityMeta?.map((activity) => ({
       ...activity,
       total: 0,
     })) || [];
@@ -98,21 +98,22 @@ const ActilityLogsPieChart: React.FC<IActilityLogsPieChartProps> = ({
           </PieChart>
         </ResponsiveContainer>
         <div className="flex justify-center flex-col items-left gap-x-4 ml-auto w-max">
-          {activityMeta?.map((activity) => (
-            <div className="inline-flex items-center">
-              <span
-                style={{ backgroundColor: activity?.fillColor.toString() }}
-                className="size-2.5 inline-block  rounded-sm me-2"
-              ></span>
-              <span className="text-[13px] text-gray-600 dark:text-neutral-400">
-                {activity?.label}
-              </span>
-            </div>
-          ))}
+          {activityMeta?.length &&
+            activityMeta?.map((activity) => (
+              <div className="inline-flex items-center">
+                <span
+                  style={{ backgroundColor: activity?.fillColor.toString() }}
+                  className="size-2.5 inline-block rounded-sm me-2"
+                ></span>
+                <span className="text-[13px] text-gray-600 dark:text-neutral-400 min-w-max">
+                  {activity?.label}
+                </span>
+              </div>
+            ))}
         </div>
       </div>
     </>
   );
 };
 
-export default ActilityLogsPieChart;
+export default ActivityLogsPieChart;

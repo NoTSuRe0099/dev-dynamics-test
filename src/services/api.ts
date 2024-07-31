@@ -38,7 +38,7 @@ export interface IActivityMeta {
 
 export const fetchData = async (): Promise<ApiResponse> => {
   try {
-    const response = await fetch('./data.json');
+    const response = await fetch('/data.json');
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response?.status}`);
     }
@@ -50,16 +50,3 @@ export const fetchData = async (): Promise<ApiResponse> => {
     throw error;
   }
 };
-// const fetchData = async () => {
-//   try {
-//     const response = await fetch('your-api-endpoint');
-//     if (!response.ok) {
-//       throw new Error(`HTTP error! status: ${response.status}`);
-//     }
-//     const data = await response.json();
-//     return data;
-//   } catch (error) {
-//     console.error('Fetch error:', error);
-//     throw error;
-//   }
-// };

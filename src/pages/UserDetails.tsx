@@ -1,18 +1,20 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router';
-import ActilityLogsPieChart from '../../components/ActilityLogs/ActilityLogsPieChart';
-import ActivityStatistics from '../../components/ActilityLogs/ActivityLogs';
-import ActivityChart from '../../components/ActivityChart';
-import { processDayWiseActivity } from '../../functions';
+import { useNavigate, useParams } from 'react-router';
+import ActilityLogsPieChart from '../components/ActivityLogs/ActivityLogsPieChart';
+import ActivityStatistics from '../components/ActivityLogs/ActivityLogs';
+import ActivityChart from '../components/ActivityChart';
+import { processDayWiseActivity } from '../functions';
 import {
   getUserDetails,
   selectActivityMeta,
   selectUserDetails,
-} from '../userSlice';
+} from '../reducers/userSlice';
+import { BiArrowBack } from 'react-icons/bi';
 
 const UserDetails: React.FC = () => {
   const params = useParams();
+  const navigate = useNavigate();
 
   const dispatch = useDispatch();
 
@@ -25,6 +27,14 @@ const UserDetails: React.FC = () => {
 
   return (
     <>
+      <div>
+        <button
+          onClick={() => navigate('/')}
+          className="py-[7px] px-2.5 inline-flex items-center gap-1 font-medium text-sm rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-gray-100"
+        >
+          <BiArrowBack /> Back
+        </button>
+      </div>
       <ActivityStatistics
         activityMeta={activityMeta}
         userData={userDetails ? [userDetails] : []}
