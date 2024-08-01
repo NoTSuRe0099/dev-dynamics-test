@@ -4,18 +4,6 @@ import {
   IAuthorWorklog,
   IDayWiseActivity,
 } from '../services/api';
-export interface IActivities extends IActivityMeta {
-  total: number;
-}
-
-export interface IActivityByDate {
-  date: string | number | Date;
-  activities: IActivities[];
-}
-
-export interface WeeklyAverage {
-  [key: string]: { average: number; trend: string };
-}
 
 export const processDayWiseActivity = (
   data: IDayWiseActivity[],
@@ -47,6 +35,15 @@ const getItemCount = (
 ): IActivity | null => {
   return day?.items?.children?.find((item) => item?.label === label) || null;
 };
+
+export interface IActivities extends IActivityMeta {
+  total: number;
+}
+
+export interface IActivityByDate {
+  date: string | number | Date;
+  activities: IActivities[];
+}
 
 export const getActivities = (
   dayWiseData: IDayWiseActivity[],
@@ -87,6 +84,10 @@ export const getActivities = (
 
   return activityByDate;
 };
+
+export interface WeeklyAverage {
+  [key: string]: { average: number; trend: string };
+}
 
 export function calculateWeeklyAverages(user: IAuthorWorklog): WeeklyAverage {
   const weeklyActivitySums: { [key: string]: number } = {};

@@ -21,7 +21,7 @@ const ActivityChart: React.FC<ActivityChartProps> = ({
   data,
   activityMeta,
 }) => {
-  const initChartData = processDayWiseActivity(data) || [];
+  const initChartData = processDayWiseActivity(data, activityMeta) || [];
   const [chartData, setChartData] = useState(initChartData);
   const selectionRange = {
     startDate: new Date(initChartData[0]?.date),

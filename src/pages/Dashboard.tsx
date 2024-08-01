@@ -38,7 +38,7 @@ const Dashboard: React.FC = () => {
         )}
         <ActilityLogsPieChart
           activityMeta={activityMeta}
-          userData={processDayWiseActivity(dayWiseData)}
+          userData={processDayWiseActivity(dayWiseData, activityMeta)}
         />
       </div>
       <UserTable users={userData} />
