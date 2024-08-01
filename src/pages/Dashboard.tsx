@@ -40,7 +40,7 @@ const Dashboard: React.FC = () => {
           dayWiseData={dayWiseData}
         />
       </div>
-      <UserTable users={userData} />
+      <UserTable users={userData} activityMeta={activityMeta} />
       {/* <UserStatistics userData={userData} activityMeta={activityMeta} /> */}
     </>
   );
