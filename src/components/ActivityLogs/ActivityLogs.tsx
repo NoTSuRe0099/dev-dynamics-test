@@ -43,7 +43,7 @@ const ActivityStatistics: React.FC<iActivityStatisticsProps> = ({
   });
 
   const weeklyAverage = aggregateData(userData);
-  console.log('weeklyAverage', weeklyAverage);
+
   return (
     <>
       <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-2 sm:gap-5">
@@ -60,7 +60,7 @@ const ActivityStatistics: React.FC<iActivityStatisticsProps> = ({
               </div>
 
               <div className="mt-1 flex items-center justify-between">
-                <h3 className="text-xl sm:text-2xl font-medium text-gray-800">
+                <h3 className="text-xl sm:text-3xl font-semibold text-gray-800">
                   {activity.total}
                 </h3>
                 <div className="flex flex-col items-end">

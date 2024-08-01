@@ -11,6 +11,7 @@ import {
   selectUserDetails,
 } from '../reducers/userSlice';
 import { BiArrowBack } from 'react-icons/bi';
+import CalendarComponent from '../components/CalenderComponent';
 
 const UserDetails: React.FC = () => {
   const params = useParams();
@@ -40,6 +41,12 @@ const UserDetails: React.FC = () => {
         userData={userDetails ? [userDetails] : []}
         dayWiseData={userDetails?.dayWiseActivity || []}
       />
+      <CalendarComponent
+        activityMeta={activityMeta}
+        userData={userDetails ? [userDetails] : []}
+        dayWiseData={userDetails?.dayWiseActivity || []}
+      />
+
       <div className="flex lg:flex-row flex-col gap-4 sm:gap-6 lg:h-[400px]">
         {userDetails?.dayWiseActivity && activityMeta && (
           <ActivityChart

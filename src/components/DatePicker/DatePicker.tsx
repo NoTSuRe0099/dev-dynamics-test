@@ -22,7 +22,10 @@ const DatePicker: React.FC<IDatePickerProps> = (props) => {
         onClick={() => setIsDateRangeOpened((prevState) => !prevState)}
         className="py-[7px] px-2.5 inline-flex items-center gap-1 font-medium text-sm rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-gray-100"
       >
-        {isDateRangeOpened ? 'Close' : 'All Time'} <MdOutlineDateRange />
+        {isDateRangeOpened
+          ? 'Close'
+          : `${dateRange[0]?.startDate?.toDateString()}-${dateRange[0]?.endDate?.toDateString()}`}
+        <MdOutlineDateRange />
       </button>
       {isDateRangeOpened && (
         <div className="absolute right-0 top-12 z-10 bg-white border shadow-sm rounded-xl p-4">
@@ -32,6 +35,7 @@ const DatePicker: React.FC<IDatePickerProps> = (props) => {
             maxDate={new Date(maxDate)}
             ranges={dateRange}
             onChange={handleSelect}
+            showMonthAndYearPickers={false}
           />
         </div>
       )}

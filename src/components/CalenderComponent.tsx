@@ -1,23 +1,17 @@
 import React from 'react';
-import { Calendar, Popover, Whisper, Tooltip } from 'rsuite';
+import { Calendar, Popover, Whisper } from 'rsuite';
 import 'rsuite/Calendar/styles/index.css';
 import {
   IActivityMeta,
   IAuthorWorklog,
   IDayWiseActivity,
 } from '../services/api';
+import { dateWiseUserActivities, getActivities } from '../functions';
 
 interface ICalenderComponent {
   activityMeta: IActivityMeta[];
   dayWiseData: IDayWiseActivity[];
   userData: IAuthorWorklog[];
-}
-interface IActivities extends IActivityMeta {
-  total: number;
-}
-interface IActivityByDate {
-  date: string | number | Date;
-  activities: IActivities[];
 }
 
 const CalenderComponent: React.FC<ICalenderComponent> = ({
@@ -25,86 +19,87 @@ const CalenderComponent: React.FC<ICalenderComponent> = ({
   activityMeta,
   userData,
 }) => {
-  // const getDayWiseData = (users: IUser[]): IDayWiseActivity[] => {
-  //   return users.flatMap((user) => user.dayWiseActivity);
-  // };
+  const activityByDate = getActivities(dayWiseData, activityMeta);
+  const dateWiseUserActivitiesData = dateWiseUserActivities(
+    userData,
+    activityMeta
+  );
 
-  // const _dayWiseData = getDayWiseData(users);
-
-  // // Function to get additional statistics for tooltips and day boxes
-  // const getUserStatistics = (date: string) => {
-  //   return users.map((user) => {
-  //     const dayActivity = user.dayWiseActivity.find(
-  //       (activity) => activity.date === date
-  //     );
-  //     return {
-  //       name: user.name,
-  //       totalActivity: user.totalActivity,
-  //       dayActivity,
-  //       isBurnOut: user.activeDays.isBurnOut,
-  //     };
-  //   });
-  // };
-
-  const getActivities = (dayWiseData: IDayWiseActivity[]) => {
-    //@ts-ignore
-    const obj = Object.groupBy(dayWiseData, (it: { date: string }) => it?.date);
-    const activityByDate: IActivityByDate[] = [];
-    interface IActivities extends IActivityMeta {
-      label: string;
-      total: number;
-    }
-
-    //@ts-ignore
-    for (let date in obj) {
-      const activities: IActivities[] = activityMeta.map((activity) => ({
-        ...activity,
-        total: 0,
-      }));
-      const allActivities = obj[date]?.flatMap(
-        (it: { items: { children: any } }) => it?.items?.children
-      );
-
-      activities.forEach((activity) => {
-        allActivities?.forEach(
-          (tActivity: { label: string; count: string | number }) => {
-            if (
-              tActivity.label.toLocaleLowerCase() ===
-              activity.label.toLocaleLowerCase()
-            ) {
-              activity.total += +tActivity.count;
-            }
-          }
-        );
-      });
-
-      const newObj = {
-        date: date,
-        activities: activities,
+  const getUserActivitiesByDate: any = (date: string) => {
+    return dateWiseUserActivitiesData?.map((it) => {
+      let obj = {
+        name: it?.name,
       };
 
-      activityByDate?.push(newObj);
-    }
+      const userActs = it?.activities?.find(
+        (activity) =>
+          new Date(activity?.date).toDateString() ===
+          new Date(date).toDateString()
+      );
 
-    return activityByDate;
+      obj = { ...obj, ...userActs };
+
+      return obj;
+    });
   };
 
-  const activityByDate = getActivities(dayWiseData);
-  console.log('activityByDate', activityByDate);
-  const renderCell = (data: any) => {
-    const isActivityAvailable = activityByDate?.find(
+  interface Activity {
+    label: string;
+    fillColor: string;
+    total: number;
+  }
+
+  interface UserData {
+    name: string;
+    date: string;
+    activities: Activity[];
+  }
+
+  const generateComparativeInsights = (data: UserData[]): string[] => {
+    const activityTotals: { [key: string]: { [key: string]: number } } = {};
+    const insights: string[] = [];
+
+    data.forEach((user) => {
+      user.activities.forEach((activity) => {
+        if (!activityTotals[activity.label]) {
+          activityTotals[activity.label] = {};
+        }
+        if (!activityTotals[activity.label][user.name]) {
+          activityTotals[activity.label][user.name] = 0;
+        }
+        activityTotals[activity.label][user.name] += activity.total;
+      });
+    });
+
+    Object.keys(activityTotals).forEach((activityLabel) => {
+      const users = activityTotals[activityLabel];
+      const sortedUsers = Object.keys(users).sort(
+        (a, b) => users[b] - users[a]
+      );
+      const topUser = sortedUsers[0];
+      insights.push(
+        `${topUser} has created the most ${activityLabel} with a total of ${users[topUser]} activities.`
+      );
+    });
+
+    return insights;
+  };
+
+  const renderCell = (date: any) => {
+    const isActivityAvailable = activityByDate.find(
       (activity) =>
-        new Date(activity?.date).toDateString() ===
-        new Date(data).toDateString()
+        new Date(activity.date).toDateString() === new Date(date).toDateString()
     );
 
     if (!isActivityAvailable) return null;
 
-    if (isActivityAvailable?.activities) {
+    if (isActivityAvailable.activities) {
       const totalActivities = isActivityAvailable.activities.reduce(
         (sum, activity) => sum + activity.total,
         0
       );
+
+      console.log('getUserActivitiesByDate', getUserActivitiesByDate(date));
 
       const moreItem = (
         <li>
@@ -113,20 +108,39 @@ const CalenderComponent: React.FC<ICalenderComponent> = ({
             trigger="click"
             speaker={
               <Popover>
-                {isActivityAvailable?.activities?.map(
-                  (item: any, index: any) => (
-                    <p className="font-bold" key={index}>
-                      <b style={{ color: item?.fillColor?.toString() }}>
-                        {item.label}
-                      </b>{' '}
-                      - {item.total}
-                    </p>
-                  )
-                )}
+                <div className="max-h-[200px] overflow-auto">
+                <div className='flex items-center gap-2'>  <b className="text-[14px] font-bold">Top Insights:</b> <p>!"Top contributor by activity"</p></div>
+                  {generateComparativeInsights(
+                    getUserActivitiesByDate(date)
+                  )?.map((it) => (
+                    <p className="font-light">{it}</p>
+                  ))}
+                  <hr className="mt-2 mb-2" />
+                  <b className="text-[14px] font-bold mb-2">
+                    Detailed User Overview:
+                  </b>
+                  {getUserActivitiesByDate(date)?.map(
+                    (item: any, index: any) => (
+                      <>
+                        <p className="font-bold">
+                          <b>Name</b> - {item?.name}
+                        </p>
+                        {item?.activities?.map((el: any) => (
+                          <p className="font-bold" key={index}>
+                            <b style={{ color: el.fillColor?.toString() }}>
+                              {el.label}
+                            </b>{' '}
+                            - {el.total}
+                          </p>
+                        ))}
+                      </>
+                    )
+                  )}
+                </div>
               </Popover>
             }
           >
-            <a className="font-bold text-xs underline ml-1 block " href="#">
+            <a className="font-bold text-xs underline ml-1 block" href="#">
               View Details
             </a>
           </Whisper>
@@ -142,9 +156,9 @@ const CalenderComponent: React.FC<ICalenderComponent> = ({
               <div>
                 <strong>Total Activities:</strong> {totalActivities}
               </div>
-              {isActivityAvailable?.activities?.map((item, index) => (
+              {isActivityAvailable.activities.map((item, index) => (
                 <div key={index}>
-                  <b style={{ color: item?.fillColor?.toString() }}>
+                  <b style={{ color: item.fillColor?.toString() }}>
                     {item.label}
                   </b>{' '}
                   - {item.total}
@@ -154,21 +168,19 @@ const CalenderComponent: React.FC<ICalenderComponent> = ({
           }
         >
           <ul
-            onClick={(e) => {
-              e?.preventDefault();
-            }}
-            className="calendar-todo-list flex items-center flex-wrap m-0 p-0 gap-2 "
+            onClick={(e) => e.preventDefault()}
+            className="calendar-todo-list ml-4 -mt-2 p-0"
           >
             <li className="font-bold text-[12px]">
               <strong>Total:</strong> {totalActivities}
             </li>
-            {[...isActivityAvailable?.activities]
-              ?.splice(0,2)
-              ?.map((item, index) => (
+            {[...isActivityAvailable.activities]
+              .splice(0, 2)
+              .map((item, index) => (
                 <li className="font-bold text-[12px]" key={index}>
-                  <b style={{ color: item?.fillColor?.toString() }}>
+                  <b style={{ color: item.fillColor?.toString() }}>
                     {item.label}
-                  </b>
+                  </b>{' '}
                   - {item.total}
                 </li>
               ))}
@@ -180,15 +192,14 @@ const CalenderComponent: React.FC<ICalenderComponent> = ({
   };
 
   return (
-    <div className="">
+    <div className="bg-white border shadow-sm rounded-xl p-4">
       <Calendar
         defaultValue={new Date(activityByDate[0]?.date)}
         renderCell={renderCell}
-        onSelect={(e) => {
-          e?.preventDefault();
-        }}
+        // @ts-ignore
+        onSelect={(e) => e.preventDefault()}
         bordered
-        className="bg-white border shadow-sm rounded-xl p-4"
+        className="bg-white border shadow-sm rounded-xl"
       />
     </div>
   );

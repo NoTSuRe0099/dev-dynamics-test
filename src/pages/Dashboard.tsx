@@ -6,11 +6,7 @@ import ActilityLogsPieChart from '../components/ActivityLogs/ActivityLogsPieChar
 import CalendarComponent from '../components/CalenderComponent';
 import Navbar from '../components/Navbar';
 import UserTable from '../components/UserTable';
-import {
-  aggregateData,
-  calculateWeeklyAverages,
-  processDayWiseActivity,
-} from '../functions';
+import { processDayWiseActivity } from '../functions';
 import {
   selectActivityMeta,
   selectDayWiseData,
@@ -22,27 +18,18 @@ const Dashboard: React.FC = () => {
   const dayWiseData = useSelector(selectDayWiseData);
   const activityMeta = useSelector(selectActivityMeta);
 
-  // // Calculate weekly averages for each user
-  // userData.forEach((user) => {
-  //   const weeklyAverages = calculateWeeklyAverages(user);
-  //   console.log(`Weekly averages for ${user.name}:`, weeklyAverages);
-  // });
-
-  // // Calculate combined data
-  // const combinedData = aggregateData(userData);
-  // console.log('Combined weekly averages:', combinedData);
   return (
     <>
       <Navbar />
-      <CalendarComponent
-        dayWiseData={dayWiseData}
-        activityMeta={activityMeta}
-        userData={userData}
-      />
       <ActivityStatistics
         activityMeta={activityMeta}
         userData={userData}
         dayWiseData={dayWiseData}
+      />
+      <CalendarComponent
+        dayWiseData={dayWiseData}
+        activityMeta={activityMeta}
+        userData={userData}
       />
 
       <div className="flex lg:flex-row flex-col gap-4 sm:gap-6 lg:h-[400px]">

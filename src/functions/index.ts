@@ -67,61 +67,56 @@ const getItemCount = (
   return day?.items?.children?.find((item) => item?.label === label) || null;
 };
 
-// export function calculateWeeklyAverages(user: IAuthorWorklog) {
-//   const weeklyActivitySums: { [key: string]: number } = {};
-//   const weeklyActivityCounts: { [key: string]: number } = {};
-//   const activitySums: { [key: string]: number } = {};
-//   // const weeksCount = Math.ceil(user.dayWiseActivity.length / 7);
+export interface IActivities extends IActivityMeta {
+  total: number;
+}
 
-//   user.dayWiseActivity.forEach((dayActivity, index) => {
-//     dayActivity.items.children.forEach((activity) => {
-//       if (!activitySums[activity.label]) {
-//         activitySums[activity.label] = 0;
-//         weeklyActivitySums[activity.label] = 0;
-//         weeklyActivityCounts[activity.label] = 0;
-//       }
-//       activitySums[activity.label] += +activity?.count || 0;
-//       weeklyActivitySums[activity.label] += +activity?.count || 0;
+export interface IActivityByDate {
+  date: string | number | Date;
+  activities: IActivities[];
+}
 
-//       if ((index + 1) % 7 === 0 || index === user.dayWiseActivity.length - 1) {
-//         weeklyActivityCounts[activity.label]++;
-//       }
-//     });
-//   });
+export const getActivities = (
+  dayWiseData: IDayWiseActivity[],
+  activityMeta: IActivityMeta[]
+) => {
+  const groupedData = dayWiseData.reduce((acc, curr) => {
+    acc[curr.date] = acc[curr.date] || [];
+    acc[curr.date].push(curr);
+    return acc;
+  }, {} as { [key: string]: IDayWiseActivity[] });
 
-//   // Calculate the average for each activity type
-//   const averages: { [key: string]: number } = {};
-//   for (const label in activitySums) {
-//     averages[label] = weeklyActivitySums[label] / weeklyActivityCounts[label];
-//   }
+  const activityByDate: IActivityByDate[] = Object.keys(groupedData).map(
+    (date) => {
+      const activities: IActivities[] = activityMeta?.map((activity) => ({
+        ...activity,
+        total: 0,
+      }));
+      const allActivities = groupedData[date].flatMap(
+        (it) => it?.items?.children
+      );
 
-//   return averages;
-// }
+      activities?.forEach((activity) => {
+        allActivities?.forEach((tActivity) => {
+          if (
+            tActivity.label.toLowerCase() === activity?.label?.toLowerCase()
+          ) {
+            activity.total += +tActivity?.count;
+          }
+        });
+      });
 
-// export function aggregateData(users: IAuthorWorklog[]) {
-//   const combinedSums: { [key: string]: number } = {};
-//   const combinedCounts: { [key: string]: number } = {};
+      return {
+        date: new Date(date),
+        activities,
+      };
+    }
+  );
 
-//   users.forEach((user) => {
-//     const weeklyAverages = calculateWeeklyAverages(user);
-//     for (const label in weeklyAverages) {
-//       if (!combinedSums[label]) {
-//         combinedSums[label] = 0;
-//         combinedCounts[label] = 0;
-//       }
-//       combinedSums[label] += weeklyAverages[label];
-//       combinedCounts[label]++;
-//     }
-//   });
+  return activityByDate;
+};
 
-//   for (const label in combinedSums) {
-//     combinedSums[label] /= combinedCounts[label];
-//   }
-
-//   return combinedSums;
-// }
-
-interface WeeklyAverage {
+export interface WeeklyAverage {
   [key: string]: { average: number; trend: string };
 }
 
@@ -130,20 +125,23 @@ export function calculateWeeklyAverages(user: IAuthorWorklog): WeeklyAverage {
   const weeklyActivityCounts: { [key: string]: number } = {};
   const activitySums: { [key: string]: number[] } = {};
 
-  user.dayWiseActivity.forEach((dayActivity, index) => {
-    dayActivity.items.children.forEach((activity) => {
-      if (!activitySums[activity.label]) {
-        activitySums[activity.label] = [];
-        weeklyActivitySums[activity.label] = 0;
-        weeklyActivityCounts[activity.label] = 0;
+  user?.dayWiseActivity?.forEach((dayActivity, index) => {
+    dayActivity?.items?.children.forEach((activity) => {
+      if (!activitySums[activity?.label]) {
+        activitySums[activity?.label] = [];
+        weeklyActivitySums[activity?.label] = 0;
+        weeklyActivityCounts[activity?.label] = 0;
       }
-      const activityCount = +activity.count || 0;
-      weeklyActivitySums[activity.label] += activityCount;
+      const activityCount = +activity?.count || 0;
+      weeklyActivitySums[activity?.label] += activityCount;
 
-      if ((index + 1) % 7 === 0 || index === user.dayWiseActivity.length - 1) {
-        activitySums[activity.label].push(weeklyActivitySums[activity.label]);
-        weeklyActivitySums[activity.label] = 0; // Reset for the next week
-        weeklyActivityCounts[activity.label]++;
+      if (
+        (index + 1) % 7 === 0 ||
+        index === user?.dayWiseActivity?.length - 1
+      ) {
+        activitySums[activity?.label].push(weeklyActivitySums[activity?.label]);
+        weeklyActivitySums[activity?.label] = 0; // Reset for the next week
+        weeklyActivityCounts[activity?.label]++;
       }
     });
   });
@@ -225,3 +223,23 @@ export function aggregateData(users: IAuthorWorklog[]): WeeklyAverage {
 
   return combinedAverages;
 }
+
+export const dateWiseUserActivities = (
+  userData: IAuthorWorklog[],
+  activityMeta: IActivityMeta[]
+) => {
+  return userData?.map((user) => {
+    const activitiesWithDate = getActivities(
+      user?.dayWiseActivity,
+      activityMeta
+    );
+
+    const { name, totalActivity } = user;
+
+    return {
+      name,
+      totalActivity,
+      activities: activitiesWithDate,
+    };
+  });
+};

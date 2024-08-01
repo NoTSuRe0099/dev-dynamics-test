@@ -11,8 +11,6 @@ import {
 } from 'recharts';
 import { processDayWiseActivity } from '../functions';
 import { IActivityMeta, IDayWiseActivity } from '../services/api';
-import { DateRange, RangeKeyDict } from 'react-date-range';
-import { MdOutlineDateRange } from 'react-icons/md';
 import DatePicker from './DatePicker/DatePicker';
 interface ActivityChartProps {
   data: IDayWiseActivity[];
