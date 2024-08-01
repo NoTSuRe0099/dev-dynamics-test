@@ -1,10 +1,7 @@
 import React from 'react';
 import { Cell, Pie, PieChart, ResponsiveContainer } from 'recharts';
 import { processDayWiseActivity } from '../../functions';
-import {
-  IActivityMeta,
-  IDayWiseActivity
-} from '../../services/api';
+import { IActivityMeta, IDayWiseActivity } from '../../services/api';
 interface IActivityLogsPieChartProps {
   dayWiseData: IDayWiseActivity[];
   activityMeta: IActivityMeta[];

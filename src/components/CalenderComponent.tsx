@@ -211,6 +211,9 @@ const CalenderComponent: React.FC<ICalenderComponent> = ({
 
   return (
     <div className="bg-white border shadow-sm rounded-xl p-4">
+      <div className="flex items-center p-4 ">
+        <h1 className="text-2xl font-bold text-gray-800">Daywise Activities</h1>
+      </div>
       <Calendar
         defaultValue={new Date(activityByDate[0]?.date)}
         renderCell={renderCell}

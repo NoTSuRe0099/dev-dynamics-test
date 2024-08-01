@@ -56,6 +56,9 @@ const ActivityChart: React.FC<ActivityChartProps> = ({
 
   return (
     <div className="bg-white border shadow-sm rounded-xl p-4 w-full lg:w-[75%] h-[400px] lg:h-full">
+      <div className="flex items-center p-4 ">
+        <h1 className="text-2xl font-bold text-gray-800">Activity Graph</h1>
+      </div>
       <DatePicker
         dateRange={[dateRange]}
         minDate={initChartData[0]?.date}

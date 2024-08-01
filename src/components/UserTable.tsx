@@ -15,6 +15,11 @@ const UserTable: React.FC<UserTableProps> = ({ users }) => {
   return (
     <>
       <div className="flex-col bg-white border shadow-sm rounded-xl flex p-4">
+        <div className="flex items-center p-4">
+          <h1 className="text-2xl font-bold text-gray-800">
+            Contributors List
+          </h1>
+        </div>
         <div className="-m-1.5 overflow-x-auto">
           <div className="p-1.5 min-w-full inline-block align-middle">
             <div className="border rounded-lg overflow-hidden">
