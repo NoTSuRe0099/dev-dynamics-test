@@ -4,41 +4,22 @@ import {
   IAuthorWorklog,
   IDayWiseActivity,
 } from '../services/api';
+export interface IActivities extends IActivityMeta {
+  total: number;
+}
 
-const init = [
-  {
-    label: 'PR Open',
-    fillColor: '#EF6B6B',
-  },
-  {
-    label: 'PR Merged',
-    fillColor: '#61CDBB',
-  },
-  {
-    label: 'Commits',
-    fillColor: '#FAC76E',
-  },
-  {
-    label: 'PR Reviewed',
-    fillColor: '#C2528B',
-  },
-  {
-    label: 'PR Comments',
-    fillColor: '#0396A6',
-  },
-  {
-    label: 'Incident Alerts',
-    fillColor: '#5F50A9',
-  },
-  {
-    label: 'Incidents Resolved',
-    fillColor: '#8F3519',
-  },
-];
+export interface IActivityByDate {
+  date: string | number | Date;
+  activities: IActivities[];
+}
+
+export interface WeeklyAverage {
+  [key: string]: { average: number; trend: string };
+}
 
 export const processDayWiseActivity = (
   data: IDayWiseActivity[],
-  activityMeta: IActivityMeta[] = init
+  activityMeta: IActivityMeta[] = []
 ) => {
   const _data: IDayWiseActivity[] = JSON.parse(JSON.stringify(data));
 
@@ -66,15 +47,6 @@ const getItemCount = (
 ): IActivity | null => {
   return day?.items?.children?.find((item) => item?.label === label) || null;
 };
-
-export interface IActivities extends IActivityMeta {
-  total: number;
-}
-
-export interface IActivityByDate {
-  date: string | number | Date;
-  activities: IActivities[];
-}
 
 export const getActivities = (
   dayWiseData: IDayWiseActivity[],
@@ -115,10 +87,6 @@ export const getActivities = (
 
   return activityByDate;
 };
-
-export interface WeeklyAverage {
-  [key: string]: { average: number; trend: string };
-}
 
 export function calculateWeeklyAverages(user: IAuthorWorklog): WeeklyAverage {
   const weeklyActivitySums: { [key: string]: number } = {};

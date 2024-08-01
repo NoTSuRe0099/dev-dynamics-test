@@ -109,38 +109,48 @@ const CalenderComponent: React.FC<ICalenderComponent> = ({
             speaker={
               <Popover>
                 <div className="max-h-[200px] overflow-auto">
-                <div className='flex items-center gap-2'>  <b className="text-[14px] font-bold">Top Insights:</b> <p>!"Top contributor by activity"</p></div>
-                  {generateComparativeInsights(
-                    getUserActivitiesByDate(date)
-                  )?.map((it) => (
-                    <p className="font-light">{it}</p>
-                  ))}
+                  <div className="bg-gray-100 p-2 rounded-md">
+                    <div className="flex items-center gap-2">
+                      {' '}
+                      <b className="text-[14px] font-bold">
+                        Top Insights:
+                      </b>{' '}
+                      <p>!"Top contributor by activity"</p>
+                    </div>
+                    {generateComparativeInsights(
+                      getUserActivitiesByDate(date)
+                    )?.map((it) => (
+                      <p className="font-light">{it}</p>
+                    ))}
+                  </div>
                   <hr className="mt-2 mb-2" />
                   <b className="text-[14px] font-bold mb-2">
                     Detailed User Overview:
                   </b>
-                  {getUserActivitiesByDate(date)?.map(
-                    (item: any, index: any) => (
-                      <>
-                        <p className="font-bold">
-                          <b>Name</b> - {item?.name}
-                        </p>
-                        {item?.activities?.map((el: any) => (
-                          <p className="font-bold" key={index}>
-                            <b style={{ color: el.fillColor?.toString() }}>
-                              {el.label}
-                            </b>{' '}
-                            - {el.total}
+                  <div className="bg-gray-100 p-2 rounded-md">
+                    {getUserActivitiesByDate(date)?.map(
+                      (item: any, index: any) => (
+                        <>
+                          <p className="font-bold">
+                            <b>Name</b> - {item?.name}
                           </p>
-                        ))}
-                      </>
-                    )
-                  )}
+                          {item?.activities?.map((el: any) => (
+                            <p className="font-bold" key={index}>
+                              <b style={{ color: el.fillColor?.toString() }}>
+                                {el.label}
+                              </b>{' '}
+                              - {el.total}
+                            </p>
+                          ))}
+                        </>
+                      )
+                    )}
+                  </div>
                 </div>
               </Popover>
             }
           >
-            <a className="font-bold text-xs underline ml-1 block" href="#">
+            <a className="font-bold text-xs underline block" href="#">
               View Details
             </a>
           </Whisper>
@@ -169,19 +179,27 @@ const CalenderComponent: React.FC<ICalenderComponent> = ({
         >
           <ul
             onClick={(e) => e.preventDefault()}
-            className="calendar-todo-list ml-4 -mt-2 p-0"
+            className="calendar-todo-list ml-4 -mt-2 p-0 w-[90%]"
           >
-            <li className="font-bold text-[12px]">
-              <strong>Total:</strong> {totalActivities}
+            <li className="font-bold text-[12px] flex items-center gap-1">
+              <strong>Total:</strong> {totalActivities} |
+              <ul className="flex items-center gap-1 calendar-todo-list">
+                {isActivityAvailable.activities?.map((item, index) => (
+                  <li className="font-bold text-[12px]" key={index}>
+                    <b style={{ color: item.fillColor?.toString() }}>
+                      {item.label}
+                    </b>{' '}
+                    - {item.total}
+                  </li>
+                ))}
+              </ul>
             </li>
-            {[...isActivityAvailable.activities]
-              .splice(0, 2)
-              .map((item, index) => (
-                <li className="font-bold text-[12px]" key={index}>
-                  <b style={{ color: item.fillColor?.toString() }}>
-                    {item.label}
-                  </b>{' '}
-                  - {item.total}
+
+            {generateComparativeInsights(getUserActivitiesByDate(date))
+              ?.splice(0, 2)
+              ?.map((it) => (
+                <li>
+                  <p className="font-light text-xs">{it}</p>
                 </li>
               ))}
             {moreItem}
@@ -200,6 +218,7 @@ const CalenderComponent: React.FC<ICalenderComponent> = ({
         onSelect={(e) => e.preventDefault()}
         bordered
         className="bg-white border shadow-sm rounded-xl"
+        value={new Date(activityByDate[0]?.date)}
       />
     </div>
   );

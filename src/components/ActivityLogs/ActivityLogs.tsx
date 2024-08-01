@@ -6,6 +6,8 @@ import {
   IAuthorWorklog,
   IDayWiseActivity,
 } from '../../services/api';
+import { AiOutlineQuestionCircle } from 'react-icons/ai';
+import Tooltip from 'react-tooltip-lite';
 
 interface iActivityStatisticsProps {
   userData: IAuthorWorklog[];
@@ -45,7 +47,19 @@ const ActivityStatistics: React.FC<iActivityStatisticsProps> = ({
   const weeklyAverage = aggregateData(userData);
 
   return (
-    <>
+    <div className="bg-white border rounded-lg shadow-md p-4">
+      <div className="flex items-center p-4 ">
+        <h1 className="text-2xl font-bold text-gray-800">Activity Overview</h1>
+        <div className="flex items-center text-gray-600">
+          {/* @ts-ignore */}
+          <Tooltip
+            content="(↑ | ↓) Trend shows if this week's activity has increased or decreased compared to the previous week."
+            direction="left"
+          >
+            <AiOutlineQuestionCircle className="ml-2 text-gray-500 hover:text-gray-700 cursor-pointer text-xl" />
+          </Tooltip>
+        </div>
+      </div>
       <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-2 sm:gap-5">
         {activities?.length ? (
           activities.map((activity, index) => (
@@ -100,7 +114,7 @@ const ActivityStatistics: React.FC<iActivityStatisticsProps> = ({
           </div>
         )}
       </div>
-    </>
+    </div>
   );
 };
 
