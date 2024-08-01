@@ -195,13 +195,13 @@ const CalenderComponent: React.FC<ICalenderComponent> = ({
               </ul>
             </li>
 
-            {generateComparativeInsights(getUserActivitiesByDate(date))
+            {/* {generateComparativeInsights(getUserActivitiesByDate(date))
               ?.splice(0, 2)
               ?.map((it) => (
                 <li>
                   <p className="font-light text-xs">{it}</p>
                 </li>
-              ))}
+              ))} */}
             {moreItem}
           </ul>
         </Whisper>

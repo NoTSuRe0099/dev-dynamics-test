@@ -23,7 +23,7 @@ const App: React.FC = () => {
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
   return (
-    <div className="p-4 sm:p-6 space-y-4 sm:space-y-6 bg-gray-50">
+    <div className="p-4 sm:p-6 space-y-4 sm:space-y-6 bg-blue-50">
       <Router>
         <Routes>
           <Route path="/" element={<Dashboard />} />

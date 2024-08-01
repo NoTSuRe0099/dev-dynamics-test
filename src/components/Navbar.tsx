@@ -6,8 +6,8 @@ const Navbar: React.FC<{ title?: string }> = (props) => {
   const navigate = useNavigate();
   return (
     <>
-      <header className="flex flex-wrap  md:justify-start md:flex-nowrap z-50 w-full bg-white border-b border-gray-200">
-        <nav className="relative  w-full mx-auto md:flex md:items-center md:justify-between md:gap-3 py-2 px-4 sm:px-6 lg:px-8">
+      <header className="flex flex-wrap  md:justify-start md:flex-nowrap z-50 w-full bg-white border-b border-gray-200 shadow-slate-50">
+        <nav className="relative  w-full mx-auto md:flex md:items-center md:justify-between md:gap-3 py-2 px-4 sm:px-6 lg:px-8 bg-slate-50">
           <div className="flex justify-between items-center gap-x-4">
             {props?.title && (
               <button

@@ -21,3 +21,24 @@
   width: 6px;
   height: 6px;
 }
+.rs-calendar-panel .rs-calendar-table-cell-day {
+  height: 60px;
+  font-size: 17px;
+  font-weight: 600;
+}
+.rs-calendar-table-header-cell {
+  background: #ccc;
+}
+.rs-calendar-panel .rs-calendar-table-header-row .rs-calendar-table-header-cell-content {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  font-size: 17px;
+  font-weight: 600;
+  color: #000;
+  
+}
+.rs-calendar-panel .rs-calendar-table-cell-selected .rs-calendar-table-cell-content {
+  background: #ccc !important;
+  border: 1px solid gray !important;
+  box-shadow: none;
+}

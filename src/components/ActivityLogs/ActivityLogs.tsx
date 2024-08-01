@@ -47,7 +47,7 @@ const ActivityStatistics: React.FC<iActivityStatisticsProps> = ({
   const weeklyAverage = aggregateData(userData);
 
   return (
-    <div className="bg-white border rounded-lg shadow-md p-4">
+    <div className="bg-white border rounded-lg shadow-sm md p-4">
       <div className="flex items-center p-4 ">
         <h1 className="text-2xl font-bold text-gray-800">Activity Overview</h1>
         <div className="flex items-center text-gray-600">
@@ -65,20 +65,25 @@ const ActivityStatistics: React.FC<iActivityStatisticsProps> = ({
           activities.map((activity, index) => (
             <div
               key={index}
+              style={{
+                background: `linear-gradient(135deg, ${activity?.fillColor?.toString()} 0%, ${activity?.fillColor?.toString()}50 80%)`,
+              }}
               className="flex flex-col bg-white border shadow-sm rounded-xl p-4 md:p-5 space-y-2"
             >
               <div className="flex items-center gap-x-2">
-                <p className="text-xs uppercase tracking-wide text-gray-500">
-                  {activity.label}
+                <p className="text-2xs uppercase tracking-wide text-gray-900">
+                  <b>{activity.label}</b>
                 </p>
               </div>
 
               <div className="mt-1 flex items-center justify-between">
-                <h3 className="text-xl sm:text-3xl font-semibold text-gray-800">
+                <h3 className="text-xl sm:text-4xl font-bold text-gray-800">
                   {activity.total}
                 </h3>
                 <div className="flex flex-col items-end">
-                  <span className="text-sm text-gray-500">Weekly Avg</span>
+                  <span className="text-sm text-gray-900 font-semibold">
+                    Weekly Avg
+                  </span>
                   <span
                     className={`text-md font-semibold text-gray-800 flex items-center gap-1 justify-center ${
                       weeklyAverage[activity.label]?.trend === 'Increased'
