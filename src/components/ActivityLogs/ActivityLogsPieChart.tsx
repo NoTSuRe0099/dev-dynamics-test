@@ -1,11 +1,12 @@
 import React from 'react';
 import { Cell, Pie, PieChart, ResponsiveContainer } from 'recharts';
-import { IActivityMeta } from '../../services/api';
+import { processDayWiseActivity } from '../../functions';
+import {
+  IActivityMeta,
+  IDayWiseActivity
+} from '../../services/api';
 interface IActivityLogsPieChartProps {
-  userData: {
-    date: string;
-    activities: { count: string; fillColor: string; label: string }[];
-  }[];
+  dayWiseData: IDayWiseActivity[];
   activityMeta: IActivityMeta[];
 }
 
@@ -46,7 +47,7 @@ const renderCustomizedLabel = ({
 
 const ActivityLogsPieChart: React.FC<IActivityLogsPieChartProps> = ({
   activityMeta,
-  userData,
+  dayWiseData,
 }) => {
   interface IActivities extends IActivityMeta {
     label: string;
@@ -59,17 +60,21 @@ const ActivityLogsPieChart: React.FC<IActivityLogsPieChartProps> = ({
       total: 0,
     })) || [];
 
+  const userData = processDayWiseActivity(dayWiseData, activityMeta);
+
   if (activities) {
     activities.map((activity) => {
       userData?.forEach((user) =>
-        user.activities?.forEach((tActivity) => {
-          if (
-            tActivity.label.toLocaleLowerCase() ===
-            activity.label.toLocaleLowerCase()
-          ) {
-            activity.total += +tActivity.count;
+        user.activities?.forEach(
+          (tActivity: { label: string; count: string | number }) => {
+            if (
+              tActivity.label.toLocaleLowerCase() ===
+              activity.label.toLocaleLowerCase()
+            ) {
+              activity.total += +tActivity.count;
+            }
           }
-        })
+        )
       );
     });
   }

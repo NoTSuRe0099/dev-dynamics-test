@@ -3,6 +3,11 @@ export interface IActivity {
   fillColor: string;
   count: number;
 }
+export interface IActiveDays {
+  days: number;
+  isBurnOut: boolean;
+  insight: string[];
+}
 
 export interface IDayWiseActivity {
   date: string;
@@ -20,6 +25,7 @@ export interface IAuthorWorklog {
   name: string;
   totalActivity: ITotalActivity[];
   dayWiseActivity: IDayWiseActivity[];
+  activeDays: IActiveDays;
 }
 
 export interface ApiResponse {

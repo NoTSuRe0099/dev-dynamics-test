@@ -27,6 +27,18 @@ const UserTable: React.FC<UserTableProps> = ({ users }) => {
                     >
                       Name
                     </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase"
+                    >
+                      Active Days
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase"
+                    >
+                      isBurnOut
+                    </th>
                     {users[0]?.totalActivity?.map((it) => (
                       <th
                         scope="col"
@@ -50,6 +62,12 @@ const UserTable: React.FC<UserTableProps> = ({ users }) => {
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">
                         {el?.name}
                       </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">
+                        {el?.activeDays?.days}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">
+                        {el?.activeDays?.isBurnOut}
+                      </td>
                       {el?.totalActivity?.map((it, i) => (
                         <td
                           key={`_${it?.name}_${i}`}
@@ -58,6 +76,7 @@ const UserTable: React.FC<UserTableProps> = ({ users }) => {
                           {it?.value}
                         </td>
                       ))}
+
                       <td className="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
                         <button
                           onClick={() => openDetailsPage(el)}

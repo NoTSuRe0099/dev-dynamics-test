@@ -6,7 +6,6 @@ import ActivityStatistics from '../components/ActivityLogs/ActivityLogs';
 import ActilityLogsPieChart from '../components/ActivityLogs/ActivityLogsPieChart';
 import CalendarComponent from '../components/CalenderComponent';
 import Navbar from '../components/Navbar';
-import { processDayWiseActivity } from '../functions';
 import {
   getUserDetails,
   selectActivityMeta,
@@ -47,10 +46,12 @@ const UserDetails: React.FC = () => {
             activityMeta={activityMeta || []}
           />
         )}
-        <ActilityLogsPieChart
-          activityMeta={activityMeta || []}
-          userData={processDayWiseActivity(userDetails?.dayWiseActivity || [])}
-        />
+        {userDetails?.dayWiseActivity && activityMeta && (
+          <ActilityLogsPieChart
+            activityMeta={activityMeta || []}
+            dayWiseData={userDetails?.dayWiseActivity || []}
+          />
+        )}
       </div>
     </>
   );
