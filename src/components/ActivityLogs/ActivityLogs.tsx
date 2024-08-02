@@ -47,9 +47,9 @@ const ActivityStatistics: React.FC<iActivityStatisticsProps> = ({
   const weeklyAverage = aggregateData(userData);
 
   return (
-    <div className="bg-white border rounded-lg shadow-sm md p-4">
-      <div className="flex items-center p-4 ">
-        <h1 className="text-2xl font-bold text-gray-800">Activity Overview</h1>
+    <div className="bg-white border rounded-lg shadow-sm p-4">
+      <div className="flex items-center p-4">
+        <h1 className="font-semibold text-xl text-gray-800">Activity Overview</h1>
         <div className="flex items-center text-gray-600">
           {/* @ts-ignore */}
           <Tooltip
@@ -60,22 +60,21 @@ const ActivityStatistics: React.FC<iActivityStatisticsProps> = ({
           </Tooltip>
         </div>
       </div>
-      <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-2 sm:gap-5">
+      <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-6">
         {activities?.length ? (
           activities.map((activity, index) => (
             <div
               key={index}
               style={{
-                background: `linear-gradient(135deg, ${activity?.fillColor?.toString()} 0%, ${activity?.fillColor?.toString()}50 80%)`,
+                background: `linear-gradient(135deg, ${activity?.fillColor?.toString() + "80"} 10%, ${activity?.fillColor?.toString() + "70"} 80%)`,
               }}
               className="flex flex-col bg-white border shadow-sm rounded-xl p-4 md:p-5 space-y-2"
             >
               <div className="flex items-center gap-x-2">
-                <p className="text-2xs uppercase tracking-wide text-gray-900">
+                <p className="text-xs uppercase tracking-wide text-gray-900">
                   <b>{activity.label}</b>
                 </p>
               </div>
-
               <div className="mt-1 flex items-center justify-between">
                 <h3 className="text-xl sm:text-4xl font-bold text-gray-800">
                   {activity.total}
@@ -85,7 +84,7 @@ const ActivityStatistics: React.FC<iActivityStatisticsProps> = ({
                     Weekly Avg
                   </span>
                   <span
-                    className={`text-md font-semibold text-gray-800 flex items-center gap-1 justify-center ${
+                    className={`text-md font-semibold flex items-center gap-1 justify-center ${
                       weeklyAverage[activity.label]?.trend === 'Increased'
                         ? 'text-green-600'
                         : 'text-red-600'
@@ -106,7 +105,7 @@ const ActivityStatistics: React.FC<iActivityStatisticsProps> = ({
           <div className="flex flex-col bg-white border shadow-sm rounded-xl">
             <div className="p-4 md:p-5">
               <div className="flex items-center gap-x-2">
-                <p className={`text-xs uppercase tracking-wide text-gray-500 `}>
+                <p className="text-xs uppercase tracking-wide text-gray-500">
                   PR Open
                 </p>
               </div>

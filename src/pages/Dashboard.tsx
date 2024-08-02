@@ -31,7 +31,7 @@ const Dashboard: React.FC = () => {
         userData={userData}
       />
 
-      <div className="flex lg:flex-row flex-col gap-4 sm:gap-6 lg:h-[400px]">
+      <div className="flex lg:flex-row flex-col gap-4 sm:gap-6 h-max lg:h-[470px]">
         {dayWiseData?.length && activityMeta?.length && (
           <ActivityChart data={dayWiseData} activityMeta={activityMeta} />
         )}

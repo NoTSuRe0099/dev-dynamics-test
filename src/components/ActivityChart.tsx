@@ -55,17 +55,18 @@ const ActivityChart: React.FC<ActivityChartProps> = ({
   console.log('dateRange', dateRange, initChartData);
 
   return (
-    <div className="bg-white border shadow-sm rounded-xl p-4 w-full lg:w-[75%] h-[400px] lg:h-full">
-      <div className="flex items-center p-4 ">
-        <h1 className="text-2xl font-bold text-gray-800">Activity Graph</h1>
+    <div className="bg-white border shadow-sm rounded-xl p-4 w-full lg:w-[75%] h-max lg:h-full">
+      <div className="flex items-center justify-between pt-4 ">
+        <h1 className="font-semibold text-xl text-gray-800">Activity Graph</h1>{' '}
+        <DatePicker
+          dateRange={[dateRange]}
+          minDate={initChartData[0]?.date}
+          maxDate={initChartData[initChartData?.length - 1]?.date}
+          handleRangeChange={handleRangeChange}
+        />
       </div>
-      <DatePicker
-        dateRange={[dateRange]}
-        minDate={initChartData[0]?.date}
-        maxDate={initChartData[initChartData?.length - 1]?.date}
-        handleRangeChange={handleRangeChange}
-      />
-      <div className="mt-4 w-full h-full max-h-[320px]">
+
+      <div className="mt-4 w-full h-full max-h-[370px]">
         {activityMeta?.length && initChartData?.length && (
           <ResponsiveContainer>
             <AreaChart data={chartData || []}>

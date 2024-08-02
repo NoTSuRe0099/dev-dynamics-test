@@ -68,15 +68,13 @@ const UserTable: React.FC<UserTableProps> = ({ users, activityMeta }) => {
       );
   }, [_users, searchTerm, filterBurnOut]);
 
-  const getNestedValue = (obj: any, key: string) => {
-    return key.split('.').reduce((o, k) => (o ? o[k] : null), obj);
-  };
-
   const sortedUsers = useMemo(() => {
     if (!sortConfig) return filteredUsers;
     const sorted = [...filteredUsers].sort((a, b) => {
-      const aValue = getNestedValue(a, sortConfig.key);
-      const bValue = getNestedValue(b, sortConfig.key);
+      // @ts-ignore
+      const aValue = a[sortConfig?.key?.toString()];
+      // @ts-ignore
+      const bValue = b[sortConfig?.key?.toString()];
       if (aValue < bValue) return sortConfig.direction === 'asc' ? -1 : 1;
       if (aValue > bValue) return sortConfig.direction === 'asc' ? 1 : -1;
       return 0;
@@ -84,13 +82,11 @@ const UserTable: React.FC<UserTableProps> = ({ users, activityMeta }) => {
     return sorted;
   }, [filteredUsers, sortConfig]);
 
-  console.log('sortedUsers', sortedUsers);
-
   return (
     <>
       <div className="flex-col bg-white border shadow-sm rounded-xl flex p-4">
         <div className="flex items-center p-4">
-          <h1 className="text-2xl font-bold text-gray-800">
+          <h1 className="font-semibold text-xl text-gray-800">
             Contributors List
           </h1>
           <div className="ml-auto flex gap-x-4">
